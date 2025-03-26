@@ -1,0 +1,19 @@
+query Anime($page: Int, $perPage: Int, $search: String = null) {
+    Page(page: $page, perPage: $perPage) {
+        media(search: $search) {
+            siteUrl
+            title {
+                english
+                native
+            }
+            description
+            bannerImage
+            averageScore
+        }
+        pageInfo {
+            lastPage
+            perPage
+            currentPage
+        }
+    }
+}
