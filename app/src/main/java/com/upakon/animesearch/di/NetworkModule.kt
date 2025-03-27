@@ -8,6 +8,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -56,5 +58,9 @@ class NetworkModule {
             .Builder()
             .add(BASE_URL,BuildConfig.apipublickey)
             .build()
+
+    @Provides
+    @Singleton
+    fun providesDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
 }
