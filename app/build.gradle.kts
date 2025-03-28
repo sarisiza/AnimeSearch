@@ -88,6 +88,9 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.apollo.runtime)
+    implementation(platform(libs.androidx.compose.bom.v20250301))
+    implementation(libs.androidx.paging.compose)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

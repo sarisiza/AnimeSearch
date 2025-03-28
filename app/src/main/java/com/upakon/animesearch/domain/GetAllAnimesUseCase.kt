@@ -1,7 +1,13 @@
 package com.upakon.animesearch.domain
 
-import com.upakon.animesearch.AnimeQuery
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.upakon.animesearch.data.Anime
+import com.upakon.animesearch.data.AnimePage
 import com.upakon.animesearch.data.AnimeRepository
+import com.upakon.animesearch.data.MAX_PER_PAGE
+import com.upakon.animesearch.data.toDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -11,31 +17,14 @@ class GetAllAnimesUseCase @Inject constructor(
     private val repository: AnimeRepository
 ) {
 
-    private val perPage = 15
-    private var page = 1
-
-    operator fun invoke(): Flow<UiState<AnimeQuery.Page>> = flow {
-        emit(UiState.LOADING)
-        val response = repository.getAnimeList(
-            page,
-            perPage,
-            null
-        )
-        response.data?.Page?.let {
-            emit(UiState.SUCCESS(it))
-            if(page == it.pageInfo?.lastPage)
-                page = 1
-            else
-                page ++
-        } ?: throw Exception("Data is empty")
-    }.catch { e ->
-        if(e is Exception){
-            emit(UiState.ERROR(e))
-        }
-    }
-
-    fun resetPages(){
-        page = 1
+    operator fun invoke(): Flow<PagingData<Anime>> {
+        return Pager(
+            config = PagingConfig(MAX_PER_PAGE),
+            initialKey = AnimeParams(page = 1),
+            pagingSourceFactory = {
+                AnimePagingSource(repository)
+            }
+        ).flow
     }
 
 }
